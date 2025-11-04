@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Meu Gato</title>
+        <style>
+            /* Faz o corpo preencher a tela inteira */
+            body {
+                margin: 0;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                animation: bgChange 6s infinite alternate;
+                font-family: Arial, sans-serif;
+            }
+
+            /* Caixa central */
+            .box {
+                background-color: white;
+                color: #333;
+                padding: 20px 20px;
+                border-radius: 20px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.2);
+                font-size: 1rem;
+                text-align: center;
+            }
+
+            /* Animação de fundo arco-íris */
+            @keyframes bgChange {
+                0%   { background-color: #ff0055; }
+                20%  { background-color: #ff9900; }
+                40%  { background-color: #ffee00; }
+                60%  { background-color: #00cc66; }
+                80%  { background-color: #0066ff; }
+                100% { background-color: #9900ff; }
+            }
+        </style>
+    </head>
+    <body>
+    <div class="box">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do <br>eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>
+Ut enim ad minim veniam, quis nostrud exercitation <br>ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <h1>Olha meu gato: 😺</h1>
+        <img src="/static/cat.gif" width="300">
+    </div>
+</body>
+</html>
