@@ -21,9 +21,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: 
+          tags: |
             ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/simple-app:${{ github.run_number }}
+            ${{ secrets.DOCKER_USERNAME }}/simple-app:v${{ github.run_number }}
   update-manifest:
     runs-on: ubuntu-latest
     steps:
