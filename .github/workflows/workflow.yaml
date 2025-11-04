@@ -23,7 +23,7 @@ jobs:
           push: true
           tags: 
             ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/simple-app:$ {{ github.run_number }}
+            ${{ secrets.DOCKER_USERNAME }}/simple-app:${{ github.run_number }}
   update-manifest:
     runs-on: ubuntu-latest
     steps:
