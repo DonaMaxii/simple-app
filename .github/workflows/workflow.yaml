@@ -1,7 +1,7 @@
 name: Build da imagem e envio para Dockerhub
 on: 
-  push:
-    branches: [ main ]
+  #push:
+   # branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -21,4 +21,19 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
+          tags: 
+            ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/simple-app:$ {{ github.run_number }}
+  update-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Realizar pull-request no repositório manifest
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.SSH_PRIVATE_KEY }}
+          repository: donamaxii/simple-app-manifests
+          branch: update-${{ github.run_number }}
+          commit-message: "updating image tag to ${{ github.run_number }}"
+          title: "updating image tag to ${{ github.run_number }}"
+          body: "Image Update"
+          add-paths: k8s/simple-app-manifest.yaml
