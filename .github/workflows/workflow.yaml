@@ -1,7 +1,7 @@
 name: Build da imagem e envio para Dockerhub
 on: 
   push:
-    banches: [ main ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
