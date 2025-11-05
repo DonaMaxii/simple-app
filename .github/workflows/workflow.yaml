@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.versao.outputs.tag }}
+      version: ${{ needs.update-version.outputs.version }}
     steps:
       - name: Setup SSH for manifests repo
         uses: webfactory/ssh-agent@v0.9.1
@@ -24,9 +25,7 @@ jobs:
           LAST=$(cat VERSION)
           NEW=$((LAST + 1))
           echo "tag=v$NEW" >> $GITHUB_OUTPUT
-          echo "${{ needs.update-version.outputs.tag }}"
           echo "version=$NEW" >> $GITHUB_OUTPUT
-          echo "${{ needs.update-version.outputs.version }}"
 
   create-image:
     runs-on: ubuntu-latest
@@ -73,3 +72,4 @@ jobs:
           git add k8s/simple-app-manifest.yaml VERSION
           git commit -m "update: image ${{ needs.update-version.outputs.tag }}"
           git push origin main
+          
