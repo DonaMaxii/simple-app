@@ -22,6 +22,11 @@ jobs:
           echo "tag=v$NEW" >> $GITHUB_OUTPUT
           echo "$NEW" > VERSION
           cat VERSION
+      - name: commit to update VERSION
+        run: |
+          git add VERSION
+          git commit -m "chore: update version to v$NEW"
+          git push origin main
 
   create-image:
     runs-on: ubuntu-latest
