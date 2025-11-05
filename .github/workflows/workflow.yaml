@@ -1,4 +1,4 @@
-name: Build da imagem e envio para Dockerhub
+name: Build da imagem, envio para Dockerhub, atualizar manifest repo
 on: 
   #push:
    # branches: [ main ]
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.versao.outputs.tag }}
-      version: ${{ needs.versao.outputs.version }}
+      version: ${{ steps.versao.outputs.version }}
     steps:
       - name: Setup SSH for manifests repo
         uses: webfactory/ssh-agent@v0.9.1
