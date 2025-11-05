@@ -5,8 +5,26 @@ on:
   workflow_dispatch:
 
 jobs:
+  #Job para incremento da versão do app
+  update-version:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.versao.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Defines version tag, incremented
+        id: versao
+        run: |
+          LAST=$(cat VERSION)
+          NEW=$((LAST + 1))
+          echo "tag=v$NEW" >> $GITHUB_ENV
+          echo "$NEW" > VERSION
+
   create-image:
     runs-on: ubuntu-latest
+    needs: update-version
     steps:
       - name: Checkout do repostóriio
         uses: actions/checkout@v4
@@ -23,9 +41,10 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/simple-app:v${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/simple-app:${{ needs.update-version.outputs.tag }}
   update-manifest:
     runs-on: ubuntu-latest
+    needs: update-version
     steps:
       #Action para conexão com chave primária SSH
       - name: Setup SSH for manifests repo
@@ -37,7 +56,7 @@ jobs:
         run: |
           git clone git@github.com:DonaMaxii/simple-app-manifests.git
           cd simple-app-manifests/k8s
-          sed -i "s|image: donamaxii/simple-app:.*|image: donamaxii/simple-app:v${{ github.sha }}|" simple-app-manifest.yaml
+          sed -i "s|image: donamaxii/simple-app:.*|image: donamaxii/simple-app:${{ needs.update-version.outputs.tag }}|" simple-app-manifest.yaml
       # Aqui será realizado commit para manifest repo
       - name: Commit with PR to manifest repo
         run: |
@@ -45,5 +64,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add k8s/simple-app-manifest.yaml
-          git commit -m "update: image v${{ github.sha }}"
+          git commit -m "update: image ${{ needs.update-version.outputs.tag }}"
           git push origin main
