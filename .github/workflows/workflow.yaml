@@ -24,9 +24,9 @@ jobs:
           LAST=$(cat VERSION)
           NEW=$((LAST + 1))
           echo "tag=v$NEW" >> $GITHUB_OUTPUT
-          echo ${{ needs.update-version.outputs.tag }}
+          echo "${{ needs.update-version.outputs.tag }}"
           echo "version=$NEW" >> $GITHUB_OUTPUT
-          echo ${{ needs.update-version.outputs.version }}
+          echo "${{ needs.update-version.outputs.version }}"
 
   create-image:
     runs-on: ubuntu-latest
@@ -67,7 +67,7 @@ jobs:
       - name: Commit with PR to manifest repo AND Update VERSION
         run: |
           cd simple-app-manifests
-          echo ${{ needs.update-version.outputs.version }} > VERSION
+          echo "${{ needs.update-version.outputs.version }}" > VERSION
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add k8s/simple-app-manifest.yaml VERSION
