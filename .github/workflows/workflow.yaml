@@ -23,17 +23,26 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/simple-app:v${{ github.run_number }}
+            ${{ secrets.DOCKER_USERNAME }}/simple-app:v${{ github.sha }}
   update-manifest:
     runs-on: ubuntu-latest
     steps:
-      - name: Realizar pull-request no repositório manifest
-        uses: peter-evans/create-pull-request@v6
+      #Action para conexão com chave primária SSH
+      - name: Setup SSH for manifests repo
+        uses: webfactory/ssh-agent@v0.9.1
         with:
-          token: ${{ secrets.SSH_PRIVATE_KEY }}
-          repository: donamaxii/simple-app-manifests
-          branch: update-${{ github.run_number }}
-          commit-message: "updating image tag to ${{ github.run_number }}"
-          title: "updating image tag to ${{ github.run_number }}"
-          body: "Image Update"
-          add-paths: k8s/simple-app-manifest.yaml
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #Aqui será feito o clone do repositório do manifest, alterando a versão da imagem docker 
+      - name: Update manifest YAML
+        run: |
+          git clone git@github.com:DonaMaxii/simple-app-manifests.git
+          cd simple-app-manifests/k8s
+          sed -i "s|image: donamaxii/simple-app:.*|image: donamaxii/simple-app:v${{ github.sha }}|" simple-app-manifest.yaml
+      # Aqui será realizado commit para manifest repo
+      - name: Commit with PR to manifest repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add simple-app-manifest.yaml
+          git commit -m "update: image v${{ github.sha }}"
+          git push origin main
