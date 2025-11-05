@@ -21,13 +21,17 @@ jobs:
           NEW=$((LAST + 1))
           echo "tag=v$NEW" >> $GITHUB_ENV
           echo "$NEW" > VERSION
+          cat VERSION
 
   create-image:
     runs-on: ubuntu-latest
     needs: update-version
     steps:
-      - name: Checkout do repostóriio
+      - name: Checkout do repositório
         uses: actions/checkout@v4
+
+      - name: Checar variável para atualizar tag temporariamente
+        run: cat ${{ needs.update-version.outputs.tag }}
 
       - name: Login no DockerHub
         uses: docker/login-action@v3
@@ -41,7 +45,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/simple-app:${{ needs.update-version.outputs.tag }}
+            ${{ secrets.DOCKER_USERNAME }}/simple-app:v${{ needs.update-version.outputs.tag }}
   update-manifest:
     runs-on: ubuntu-latest
     needs: update-version
