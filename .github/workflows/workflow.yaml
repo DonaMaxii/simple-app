@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.versao.outputs.tag }}
-      version: ${{ needs.update-version.outputs.version }}
+      version: ${{ needs.versao.outputs.version }}
     steps:
       - name: Setup SSH for manifests repo
         uses: webfactory/ssh-agent@v0.9.1
