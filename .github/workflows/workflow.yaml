@@ -19,7 +19,7 @@ jobs:
         run: |
           LAST=$(cat VERSION)
           NEW=$((LAST + 1))
-          echo "tag=v$NEW" >> $GITHUB_ENV
+          echo "tag=v$NEW" >> $GITHUB_OUTPUT
           echo "$NEW" > VERSION
           cat VERSION
 
@@ -45,7 +45,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/simple-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/simple-app:v${{ needs.update-version.outputs.tag }}
+            ${{ secrets.DOCKER_USERNAME }}/simple-app:${{ needs.update-version.outputs.tag }}
   update-manifest:
     runs-on: ubuntu-latest
     needs: update-version
