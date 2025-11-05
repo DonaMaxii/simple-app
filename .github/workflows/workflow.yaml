@@ -1,7 +1,7 @@
 name: Build da imagem, envio para Dockerhub, atualizar manifest repo
 on: 
-  #push:
-   # branches: [ main ]
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
