@@ -24,6 +24,8 @@ jobs:
           cat VERSION
       - name: commit to update VERSION
         run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
           git add VERSION
           git commit -m "chore: update version to v$NEW"
           git push origin main
