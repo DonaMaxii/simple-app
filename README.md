@@ -1,4 +1,4 @@
-# 😺 Simple-App: Automação de ciclo de desenvolvimento CI/CD, com Dockerhub, Argo CD e FastAPI
+# 😺 Simple-App: Automação de ciclo de desenvolvimento CI/CD, com Dockerhub, ArgoCD e FastAPI
 
 Olá! Este é um projeto que visa automatizar o processo de desenvolvmento, deployment e execução de uma aplicação simples em FastAPI, com ferramentas de CI/CD.
 
@@ -8,7 +8,7 @@ Para tanto, serão utilizadas as seguintes ferramentas:
 - FastAPI, uvicorn e jinja2 para aplicação web;
 - GitHub Actions para automação GitOps;
 - Cluster Kubernetes local com minikube;
-- ArgoCD para automação GitOps.
+- ArgoCD para GitOps.
 
 Neste repositório, está contida a aplicação desenvolvida para ser instalada em um cluster Kubernetes local, e atualizada em um ciclo completo de desenvolvimento integrado e integração contínua.
 
@@ -100,7 +100,7 @@ Este repositório hospedará a aplicação FastAPI criada anteriormente. Primeir
 
 Em seguida, criamos algumas variáveis especiais chamadas _secrets_, nas configurações do repositório no GitHub.
 
-- 1 - Abra a página do repositório no GitHub (ex: http://https://github.com/<user>/simple-app);
+- 1 - Abra a página do repositório no GitHub (ex: https://github.com/donamaxii/simple-app);
 
 - 2 - Clique em "Settings";
 
