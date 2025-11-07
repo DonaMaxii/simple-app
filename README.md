@@ -106,6 +106,8 @@ Em seguida, criamos algumas variáveis especiais chamadas _secrets_, nas configu
 
 - 3 - Em "Security", clique no menu suspenso "Secrets and Variables" --> "Actions";
 
+![Configurações do repositório](images/secrets-1.png)
+
 - 4 - Para criar um novo segredo, clique em "New repository secret".
 
 Nesse momento, deverão ser atribuídas os seguintes segredos, que serão referenciados no *workflow* mais à frente:
@@ -115,6 +117,8 @@ Nesse momento, deverão ser atribuídas os seguintes segredos, que serão refere
 - **DOCKER_PASSWORD**: a senha de usuário no DockerHub
 
 - **SSH_PRIVATE_KEY**: a chave SSH do repositório manifesto, para o envio de commits via SSH.
+
+![Configurações do repositório](images/secrets-2.png)
 
 ### ⚙️ Repositório do manifesto
 
@@ -289,7 +293,7 @@ Para tanto, precisamos do nosso workflow.yaml:
 
 Explicando em partes:
 
-- __on:__ : aqui definimos qual o gatilho (*trigger*) que irá acionar esse workflow. Como mencionado anteriormente, podemos definir a princípio o _**workflow_dispach**_ para testes, e depois que o processo estiver 100% funcional, incrementamos o _**push**_.
+- __on:__ : aqui definimos qual o gatilho (*trigger*) que irá acionar esse workflow. Como mencionado anteriormente, podemos definir a princípio o _**workflow_dispatch**_ para testes, e depois que o processo estiver 100% funcional, incrementamos o _**push**_.
 
 
 - __update-version__: aqui, codificamos um algoritmo para fazer o incremento da versão no arquivo VERSION, que criamos no repositório do manifesto. Também é necessário fazer o clone do referido repositório para resgatar a versão atual (v1, v2, v5, v10, etc.). Nesta etapa, são armazenadas variáveis para opção de *output*, sendo aproveitadas nos *jobs* seguintes (ex: tag e version).
@@ -297,6 +301,11 @@ Explicando em partes:
 - __create-image__: neste trecho, instruímos o workflow a clonar o repositório da aplicação, conteinerizá-lo em uma imagem Docker, realizar o login no DockerHub, e finalmente efetual o *push* desa imagem. Para tanto, lançamos mão de algumas actions, como o **actions/checkout** e o **docker/build-push-action**.
 
 - __update-manifest__: aqui, escrevemos as instruções para o workflow atualizar o manifest YAML responsável por instruir o ArgoCD a construir os objetos do cluster Kubernetes. Neste momento, o *commit* da alteração da versão da imagem será via SSH, para preservar ao máximo a segurança e a integridade da aplicação.
+
+Ao iniciar o processo do workflow, seja por *workflow_dispatch*, seja via *push*, o resultado final, quando bem sucedido, aparecerá assim na tela:
+
+![Workflow bem-sucedido](images/workflow.png)
+
 
 Observação: no repositório da aplicação, é necessário obedecer a seguinte estrutura de diretório ao criar um workflow para GitHub Actions:
 >
@@ -355,6 +364,8 @@ O cluster Kubernetes será estruturado com minikube, com Docker.
     sudo docker run hello-world
 >
 
+![Hello World no Docker](images/docker-0.png)
+
 ### 2) Instalando o minikube
 
 - Para instalar o minikube (Linux x86-64):
@@ -370,6 +381,11 @@ O cluster Kubernetes será estruturado com minikube, com Docker.
 >
     minikube start
 >
+
+![Inicialização do minikube no bash](images/minikube-1.png)
+
+![Inicialização do minikube no bash](images/minikube-2.png)
+
 
 ### 3) Instalando o ArgoCD
 
@@ -397,6 +413,8 @@ O cluster Kubernetes será estruturado com minikube, com Docker.
 >
     minikube kubectl -- -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 >
+
+![ArgoCD](images/argocd-1.png)
 
 ## 📥 Instalação do App no ArgoCD
 
@@ -441,6 +459,8 @@ Quando o processo for concluído, o painel do Argo mostrará todos os objetos do
 - Last Sync: Sync OK to <último-commit>
 - App Health: Healthy
 
+![Status do cluster no ArgoCD](images/argocd-2.png)
+
 Nesse cenário, a sincronização com o repositório do manifest foi um sucesso, onde podemos verificar o ultimo *commit*, e todos os objetos estão em pleno funcionamento e devidamente conectados. 
 
 Nesse momento, toda alteração realizada no arquivo manifest YAML será imediatamente sincronizada com o cluster local atráves do ArgoCD, uma vez que, durante a criação do app optou-se por ativar o *autosync*.
@@ -451,6 +471,9 @@ Para acessar a aplicação pelo navegador:
     minikube service simple-app –n simple-app
 >
 
+![App no ar](images/app-ok-1.png)
+
+
 ## ✅ Conclusão
 
 Se todos os passos forem bem sucedidos, teremos instaurado um ciclo completo de CI/CD, possibilitando o desenvolvimento integrado a uma atualização contínua e automatizada do aplicativo, possibilitando aos desenvolvedores economia de tempo, agilidade na entrega das atualizações, e a redução do risco de erro humano.
@@ -458,3 +481,11 @@ Se todos os passos forem bem sucedidos, teremos instaurado um ciclo completo de 
 Para testar se o processo está 100% funcional, experimente fazer o *commit* de uma pequena alteração na aplicação, por exemplo, alterando uma frase ou trocando uma imagem.
 
 No momento em que o *commit* for executado no repositório da aplicação, o GitHub Actions entrará em ação enviando uma imagem atualizada para o Dockerhub e atualizando o repositório do manifesti, e este será sincronizado com o ArgoCD, que aplicará a alteração no *cluster*.
+
+Testes finais com atualização em tempo real:
+
+![Teste final com atualização em tempo real](images/final-test-1.png)
+
+![Teste final com atualização em tempo real](images/final-test-2.png)
+
+![Teste final com atualização em tempo real](images/final-test-3.png)
