@@ -10,7 +10,7 @@ Para tanto, serão utilizadas as seguintes ferramentas:
 - Cluster Kubernetes local com minikube;
 - ArgoCD para GitOps.
 
-Neste repositório, está contida a aplicação desenvolvida para ser instalada em um cluster Kubernetes local, e atualizada em um ciclo completo de desenvolvimento integrado e integração contínua.
+Neste repositório, está contida a aplicação desenvolvida para ser instalada em um cluster Kubernetes local, e atualizada em um ciclo completo de desenvolvimento integrado e integração contínua, utilizando o Git como fonte única de veerdade (prática conhecida como GitOps).
 
 O manifesto desenvolvido para reger o deploy da aplicação no cluster está disponível aqui: [simple-app-manifests](https://github.com/DonaMaxii/simple-app-manifests/).
 
@@ -468,7 +468,7 @@ Nesse momento, toda alteração realizada no arquivo manifest YAML será imediat
 Para acessar a aplicação pelo navegador:
 
 >
-    minikube service simple-app –n simple-app
+    minikube service simple-app -n simple-app
 >
 
 ![App no ar](images/app-ok-1.png)
@@ -480,7 +480,7 @@ Se todos os passos forem bem sucedidos, teremos instaurado um ciclo completo de 
 
 Para testar se o processo está 100% funcional, experimente fazer o *commit* de uma pequena alteração na aplicação, por exemplo, alterando uma frase ou trocando uma imagem.
 
-No momento em que o *commit* for executado no repositório da aplicação, o GitHub Actions entrará em ação enviando uma imagem atualizada para o Dockerhub e atualizando o repositório do manifesti, e este será sincronizado com o ArgoCD, que aplicará a alteração no *cluster*.
+No momento em que o *commit* for executado no repositório da aplicação, o GitHub Actions entrará em ação enviando uma imagem atualizada para o Dockerhub e atualizando o repositório do manifest, e este será sincronizado com o ArgoCD, que aplicará a alteração no *cluster*.
 
 Testes finais com atualização em tempo real:
 
